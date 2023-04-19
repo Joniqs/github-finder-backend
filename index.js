@@ -6,8 +6,8 @@ const querystring = require('querystring');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const GITHUB_API_URL = process.env.REACT_APP_GITHUB_URL;
-const GITHUB_API_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+const GITHUB_API_URL = process.env.GITHUB_API_URL;
+const GITHUB_API_TOKEN = process.env.GITHUB_API_TOKEN;
 
 app.use(cors({
   origin: 'http://localhost:3000',
