@@ -1,2 +1,2 @@
 # github-finder-backend
-Nodejs ExpressJs App that works fetches github api data
+Nodejs ExpressJs App that fetches github api data
