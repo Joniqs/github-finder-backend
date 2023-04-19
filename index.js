@@ -10,7 +10,7 @@ const GITHUB_API_URL = process.env.GITHUB_API_URL;
 const GITHUB_API_TOKEN = process.env.GITHUB_API_TOKEN;
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://jonatan-kwiatkowski-github-finder.vercel.app/',
   credentials: true
 }));
 
