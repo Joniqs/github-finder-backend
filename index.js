@@ -1,7 +1,7 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const axios = require('axios');
+const axiosRetry = require('axios-retry');
 const querystring = require('querystring');
 
 const app = express();
@@ -28,10 +28,20 @@ const handleError = (res, error) => {
   res.status(500).json({ error: 'Server error' });
 };
 
+const github = axios.create({
+  baseURL: GITHUB_API_URL,
+  withCredentials: true
+});
+
+axiosRetry(github, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay
+});
+
 app.get('/search/users', async (req, res) => {
   try {
-    const response = await fetch(`${GITHUB_API_URL}/search/users?${req.url.split('?')[1]}`);
-    const data = await response.json();
+    const response = await github.get(`/search/users?${req.url.split('?')[1]}`);
+    const data = response.data;
     res.json(data);
   } catch (error) {
     handleError(res, error);
@@ -41,8 +51,8 @@ app.get('/search/users', async (req, res) => {
 app.get('/user/:login', async (req, res) => {
   try {
     const { login } = req.params;
-    const response = await fetch(`${GITHUB_API_URL}/users/${login}`);
-    const data = await response.json();
+    const response = await github.get(`/users/${login}`);
+    const data = response.data;
     res.json(data);
   } catch (error) {
     handleError(res, error);
@@ -53,8 +63,8 @@ app.get('/user/:login/repos', async (req, res) => {
   try {
     const { login } = req.params;
     const query = querystring.stringify({ sort: 'created', per_page: 10 });
-    const response = await fetch(`${GITHUB_API_URL}/users/${login}/repos?${query}`);
-    const data = await response.json();
+    const response = await github.get(`/users/${login}/repos?${query}`);
+    const data = response.data;
     console.log(data)
     res.json(data);
   } catch (error) {
