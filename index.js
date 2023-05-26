@@ -13,10 +13,12 @@ const GITHUB_API_TOKEN = process.env.GITHUB_API_TOKEN;
  * Cross-origin resource sharing middleware.
  * @type {function}
  */
-app.use(cors({
-  origin: 'https://jonatan-kwiatkowski-github-finder.vercel.app',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: 'https://jonatan-kwiatkowski-github-finder.vercel.app',
+    credentials: true,
+  })
+);
 
 /**
  * Middleware to set the Authorization header for requests to the GitHub API.
@@ -46,7 +48,7 @@ const handleError = (res, error) => {
  */
 const github = axios.create({
   baseURL: GITHUB_API_URL,
-  withCredentials: true
+  withCredentials: true,
 });
 
 /**
@@ -54,7 +56,7 @@ const github = axios.create({
  */
 axiosRetry(github, {
   retries: 3,
-  retryDelay: axiosRetry.exponentialDelay
+  retryDelay: axiosRetry.exponentialDelay,
 });
 
 /**
@@ -79,18 +81,6 @@ app.get('/search/users', async (req, res) => {
 });
 
 /**
- * Get information about a GitHub user.
- *
- * @name GET /user/:login
- * @function
- * @memberof app
- * @param {object} req - Express request object.
- * @param {object} res - Express response object.
- * @param {string} req.params.login - The username of the user to retrieve.
- * @return {object} - The user information.
- */
-
-/**
  * GET request to retrieve the repositories of a specific user on GitHub.
  *
  * @function
@@ -106,7 +96,7 @@ app.get('/user/:login/repos', async (req, res) => {
     const query = querystring.stringify({ sort: 'created', per_page: 10 });
     const response = await github.get(`/users/${login}/repos?${query}`);
     const data = response.data;
-    console.log(data)
+    console.log(data);
     res.json(data);
   } catch (error) {
     handleError(res, error);
